@@ -1,0 +1,23 @@
+version: "3.1"
+services:
+  database1:
+    image: mongo:5.0.0
+    container_name: mongodb
+    networks:
+      common:
+    ports:
+      - 27018:27017
+    volumes:
+      - ./mongo:/data/db
+  database2:
+    image: mongo:5.0.0
+    container_name: mongodb2
+    networks:
+      common:
+    ports:
+      - 27019:27017
+    volumes:
+      - ./mongo2:/data/db
+networks:
+  common:
+    driver: bridge
