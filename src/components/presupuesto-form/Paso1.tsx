@@ -15,7 +15,6 @@ const getOptions = (fromYear: number, toYear: number) => {
 interface Props {
   fromYear: number;
   toYear: number;
-  setPresupuesto: React.Dispatch<React.SetStateAction<Presupuesto>>;
 }
 
 export const Paso1 = ({ fromYear, toYear }: Props) => {
@@ -37,7 +36,7 @@ export const Paso1 = ({ fromYear, toYear }: Props) => {
             options={options}
             key="from"
             onChange={(value) => setYears(value?.value, undefined)}
-            defaultInputValue={startYear.toString()}
+            defaultInputValue={startYear?.toString()}
             required
           />
         </Grid>
@@ -47,7 +46,7 @@ export const Paso1 = ({ fromYear, toYear }: Props) => {
             options={options.filter((o) => +o.value >= startYear)}
             key="to"
             onChange={(value) => setYears(undefined, value?.value)}
-            defaultInputValue={endYear.toString()}
+            defaultInputValue={endYear?.toString()}
             required
           />
         </Grid>

@@ -1,36 +1,41 @@
 import { usePresupuesto } from "@/hooks";
-import { Table } from "@nextui-org/react";
-import { useMemo } from "react";
+import { Table, Text, Input } from "@nextui-org/react";
+import { useMemo, useState } from "react";
 
-const rows = [
-  {
-    key: "1",
-    name: "Tony Reichert",
-    role: "CEO",
-    status: "Active",
-  },
-  {
-    key: "2",
-    name: "Zoey Lang",
-    role: "Technical Lead",
-    status: "Paused",
-  },
-  {
-    key: "3",
-    name: "Jane Fisher",
-    role: "Senior Developer",
-    status: "Active",
-  },
-  {
-    key: "4",
-    name: "William Howard",
-    role: "Community Manager",
-    status: "Vacation",
-  },
-];
+const genRows = (
+  configOrigen: string[],
+  startYear: number,
+  endYear: number,
+  existingRows?: Record<string, any>[]
+) => {
+  return configOrigen.map((origen) => {
+    const row: Record<string, any> = {
+      key: origen,
+      origen,
+    };
+
+    for (let i = startYear; i <= endYear; i++) {
+      const value = existingRows?.find((r) => r[i + ""] && r.origen === origen);
+      row[i + ""] = value ? value[i] : 0;
+    }
+
+    return row;
+  });
+};
 
 export const TableCreate = () => {
-  const { startYear, endYear } = usePresupuesto();
+  const {
+    startYear,
+    endYear,
+    rows: rowsContext,
+    configOrigen,
+    setRows: setRowsContext,
+    total,
+  } = usePresupuesto();
+
+  const [rows, setRows] = useState<Record<string, any>[]>(
+    genRows(configOrigen!, startYear!, endYear!, rowsContext || [])
+  );
 
   const columns = useMemo(() => {
     const cols = [
@@ -40,7 +45,7 @@ export const TableCreate = () => {
       },
     ];
 
-    for (let i = startYear; i <= endYear; i++) {
+    for (let i = startYear!; i <= endYear!; i++) {
       cols.push({
         key: i + "",
         label: i + "",
@@ -51,25 +56,69 @@ export const TableCreate = () => {
   }, [startYear, endYear]);
 
   return (
-    <Table
-      aria-label="Example table with dynamic content"
-      css={{
-        height: "auto",
-        minWidth: "100%",
-      }}
-    >
-      <Table.Header columns={columns}>
-        {(column) => (
-          <Table.Column key={column.key}>{column.label}</Table.Column>
-        )}
-      </Table.Header>
-      <Table.Body items={rows}>
-        {(item) => (
-          <Table.Row key={item.key}>
-            {(columnKey) => <Table.Cell>{item[columnKey]}</Table.Cell>}
-          </Table.Row>
-        )}
-      </Table.Body>
-    </Table>
+    <>
+      <Table
+        aria-label="Example table with dynamic content"
+        css={{
+          height: "auto",
+          minWidth: "100%",
+        }}
+      >
+        <Table.Header columns={columns}>
+          {(column) => (
+            <Table.Column key={column.key}>{column.label}</Table.Column>
+          )}
+        </Table.Header>
+        <Table.Body items={rows}>
+          {(item: Record<string, any>) => (
+            <Table.Row key={item.key}>
+              {(columnKey) => (
+                <Table.Cell key={crypto.randomUUID()}>
+                  {columnKey === "origen" ? (
+                    <Text key={crypto.randomUUID()}>{item[columnKey]}</Text>
+                  ) : (
+                    <Input
+                      type="number"
+                      value={item[columnKey]}
+                      aria-label={crypto.randomUUID()}
+                      key={crypto.randomUUID()}
+                      step={10}
+                      min={0}
+                      onChange={(e) => {
+                        setRows((prev) =>
+                          prev.map((row) => {
+                            if (row.key === item.key) {
+                              return {
+                                ...row,
+                                [columnKey]: +e.target.value,
+                              };
+                            }
+                            return row;
+                          })
+                        );
+                      }}
+                      onBlur={() => setRowsContext(rows)}
+                    />
+                  )}
+                </Table.Cell>
+              )}
+            </Table.Row>
+          )}
+        </Table.Body>
+      </Table>
+      <div
+        style={{
+          marginTop: 10,
+          marginBottom: 10,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
+        <Text size="$xl">Total:</Text>
+        <Text size="$xl" css={{ marginLeft: 10 }}>
+          {total}
+        </Text>
+      </div>
+    </>
   );
 };
