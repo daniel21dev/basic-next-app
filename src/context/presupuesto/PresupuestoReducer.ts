@@ -1,4 +1,7 @@
-import { PresupuestoState } from "./PresupuestoProvider";
+import {
+  PRESUPUESTO_INICIAL_STATE,
+  PresupuestoState,
+} from "./PresupuestoProvider";
 
 type PresupuestoAction =
   | {
@@ -16,6 +19,13 @@ type PresupuestoAction =
   | {
       type: "SET_IS_LOADING";
       payload: boolean;
+    }
+  | {
+      type: "RESET";
+    }
+  | {
+      type: "SET_ORIGENES";
+      payload: string[];
     };
 
 export const presupuestoReducer = (
@@ -50,6 +60,16 @@ export const presupuestoReducer = (
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case "RESET":
+      return {
+        ...state,
+        ...PRESUPUESTO_INICIAL_STATE,
+      };
+    case "SET_ORIGENES":
+      return {
+        ...state,
+        configOrigen: action.payload,
       };
     default:
       return state;

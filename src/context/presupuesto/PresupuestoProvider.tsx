@@ -1,7 +1,7 @@
-import { useReducer } from "react";
+import { useEffect, useReducer, useState } from "react";
 import { PresupuestoContext } from "./PresupuestoContext";
 import { presupuestoReducer } from "./PresupuestoReducer";
-import { IPresupuesto } from "@/models";
+import { IConfigOrigenAhorro, IPresupuesto } from "@/models";
 import axios from "axios";
 import { useRouter } from "next/router";
 
@@ -15,14 +15,19 @@ export interface PresupuestoState {
   isLoading: boolean;
 }
 
-const PRESUPUESTO_INICIAL_STATE: PresupuestoState = {
+export const PRESUPUESTO_INICIAL_STATE: PresupuestoState = {
   startYear: new Date().getFullYear(),
   endYear: new Date().getFullYear() + 2,
   rows: null,
-  configOrigen: ["Propio", "Mama", "Papa", "Hermanos", "Otros"],
+  configOrigen: [],
   total: 0,
   tipoCambioDolar: 0,
   isLoading: false,
+};
+
+const getConfig = async () => {
+  const { data } = await axios.get<IConfigOrigenAhorro>("/api/origen");
+  return data;
 };
 
 export const PresupuestoProvider = ({
@@ -35,6 +40,12 @@ export const PresupuestoProvider = ({
     PRESUPUESTO_INICIAL_STATE
   );
   const router = useRouter();
+
+  useEffect(() => {
+    getConfig().then((data) => {
+      dispatch({ type: "SET_ORIGENES", payload: data.origenes });
+    });
+  }, []);
 
   const setYears = (startYear?: number, endYear?: number) => {
     dispatch({ type: "SET_YEARS", payload: { startYear, endYear } });
@@ -75,6 +86,10 @@ export const PresupuestoProvider = ({
     }
   };
 
+  const reset = () => {
+    dispatch({ type: "RESET" });
+  };
+
   return (
     <PresupuestoContext.Provider
       value={{
@@ -84,6 +99,7 @@ export const PresupuestoProvider = ({
         guardarPresupuesto,
         setTipoCambioDolar,
         setISLoading,
+        reset,
       }}
     >
       {children}

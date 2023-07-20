@@ -15,7 +15,7 @@ const NuevoPresupuesto = () => {
       case 1:
         return <Paso1 fromYear={2000} toYear={2030} />;
       case 2:
-        return <Paso2 />;
+        return <Paso2 editable />;
       case 3:
         return <Paso3 />;
     }

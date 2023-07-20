@@ -1,10 +1,18 @@
 import React from "react";
 import { Layout } from "@/components/layout/Layout";
-import { Button, Container, Grid, Text } from "@nextui-org/react";
+import { Button, Container, Text } from "@nextui-org/react";
 import { useRouter } from "next/router";
+import { usePresupuesto } from "@/hooks";
 
 const index = () => {
+  const { reset } = usePresupuesto();
   const router = useRouter();
+
+  const handleClick = (route: string) => {
+    reset();
+    router.push(route);
+  };
+
   return (
     <Layout>
       <Container display="flex" justify="center" direction="column">
@@ -13,11 +21,13 @@ const index = () => {
         </Text>
 
         <Container css={{ width: 400 }} display="flex" justify="space-around">
-          <Button auto onClick={() => router.push("/presupuestos/nuevo")}>
+          <Button auto onClick={() => handleClick("/presupuestos/nuevo")}>
             Nuevo
           </Button>
 
-          <Button auto>Ver ultimo</Button>
+          <Button auto onClick={() => handleClick("/presupuestos/ultimo")}>
+            Ver ultimo
+          </Button>
         </Container>
       </Container>
     </Layout>

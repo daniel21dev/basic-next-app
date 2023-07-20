@@ -23,7 +23,11 @@ const genRows = (
   });
 };
 
-export const TableCreate = () => {
+interface Props {
+  editable?: boolean;
+}
+
+export const TableCreate = ({ editable }: Props) => {
   const {
     startYear,
     endYear,
@@ -55,6 +59,16 @@ export const TableCreate = () => {
     return cols;
   }, [startYear, endYear]);
 
+  const rowsAndTotal = useMemo(() => {
+    return rows.map((row) => {
+      let sum = 0;
+      for (let i = startYear!; i <= endYear!; i++) {
+        sum += row[i + ""];
+      }
+      row.total = sum;
+    });
+  }, [rows]);
+
   return (
     <>
       <Table
@@ -74,7 +88,7 @@ export const TableCreate = () => {
             <Table.Row key={item.key}>
               {(columnKey) => (
                 <Table.Cell key={crypto.randomUUID()}>
-                  {columnKey === "origen" ? (
+                  {columnKey === "origen" || !editable ? (
                     <Text key={crypto.randomUUID()}>{item[columnKey]}</Text>
                   ) : (
                     <Input
@@ -106,19 +120,21 @@ export const TableCreate = () => {
           )}
         </Table.Body>
       </Table>
-      <div
-        style={{
-          marginTop: 10,
-          marginBottom: 10,
-          display: "flex",
-          justifyContent: "flex-end",
-        }}
-      >
-        <Text size="$xl">Total:</Text>
-        <Text size="$xl" css={{ marginLeft: 10 }}>
-          {total}
-        </Text>
-      </div>
+      {editable && (
+        <div
+          style={{
+            marginTop: 10,
+            marginBottom: 10,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <Text size="$xl">Total:</Text>
+          <Text size="$xl" css={{ marginLeft: 10 }}>
+            {total}
+          </Text>
+        </div>
+      )}
     </>
   );
 };
