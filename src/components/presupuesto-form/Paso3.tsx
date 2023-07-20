@@ -6,7 +6,7 @@ import { BanxicoSeries } from "@/types";
 import axios from "axios";
 
 export const Paso3 = () => {
-  const { total } = usePresupuesto();
+  const { total, setTipoCambioDolar } = usePresupuesto();
 
   const [totalDolares, setTotalDolares] = useState(0);
 
@@ -26,6 +26,7 @@ export const Paso3 = () => {
       );
 
       const cambio = data.bmx.series[0].datos[0].dato;
+      setTipoCambioDolar(+cambio);
       const totalUSD = cambio ? total / +cambio : 0;
       setTotalDolares(+totalUSD.toFixed(2));
     } catch (error) {

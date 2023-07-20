@@ -8,6 +8,14 @@ type PresupuestoAction =
   | {
       type: "SET_ROWS";
       payload: PresupuestoState["rows"];
+    }
+  | {
+      type: "SET_TIPO_CAMBIO_DOLAR";
+      payload: number;
+    }
+  | {
+      type: "SET_IS_LOADING";
+      payload: boolean;
     };
 
 export const presupuestoReducer = (
@@ -25,12 +33,23 @@ export const presupuestoReducer = (
       return {
         ...state,
         rows: action.payload,
-        total: action.payload?.reduce((acc, row) => {
-          const { origen, key, ...years } = row;
-          return (
-            acc + Object.values(years).reduce((acc, value) => acc + value, 0)
-          );
-        }, 0),
+        total:
+          action.payload?.reduce((acc, row) => {
+            const { origen, key, ...years } = row;
+            return (
+              acc + Object.values(years).reduce((acc, value) => acc + value, 0)
+            );
+          }, 0) || 0,
+      };
+    case "SET_TIPO_CAMBIO_DOLAR":
+      return {
+        ...state,
+        tipoCambioDolar: action.payload,
+      };
+    case "SET_IS_LOADING":
+      return {
+        ...state,
+        isLoading: action.payload,
       };
     default:
       return state;

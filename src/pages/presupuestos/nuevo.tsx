@@ -2,10 +2,12 @@ import { Layout } from "@/components/layout/Layout";
 import { Paso1 } from "@/components/presupuesto-form/Paso1";
 import { Paso2 } from "@/components/presupuesto-form/Paso2";
 import { Paso3 } from "@/components/presupuesto-form/Paso3";
+import { usePresupuesto } from "@/hooks";
 import { Container, Grid, Button } from "@nextui-org/react";
 import React, { useState } from "react";
 
 const NuevoPresupuesto = () => {
+  const { guardarPresupuesto } = usePresupuesto();
   const [paso, setPaso] = useState(1);
 
   const renderPaso = () => {
@@ -45,7 +47,9 @@ const NuevoPresupuesto = () => {
 
           {paso === 3 && (
             <Grid>
-              <Button auto>Terminar</Button>
+              <Button auto onPress={guardarPresupuesto}>
+                Terminar
+              </Button>
             </Grid>
           )}
         </Grid.Container>
