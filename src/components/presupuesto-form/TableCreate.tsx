@@ -1,6 +1,6 @@
 import { usePresupuesto } from "@/hooks";
 import { Table, Text, Input } from "@nextui-org/react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const genRows = (
   configOrigen: string[],
@@ -35,11 +35,20 @@ export const TableCreate = ({ editable }: Props) => {
     configOrigen,
     setRows: setRowsContext,
     total,
+    getPresupuestoConfig,
   } = usePresupuesto();
 
   const [rows, setRows] = useState<Record<string, any>[]>(
     genRows(configOrigen!, startYear!, endYear!, rowsContext || [])
   );
+
+  useEffect(() => {
+    getPresupuestoConfig();
+  }, []);
+
+  useEffect(() => {
+    setRows(genRows(configOrigen!, startYear!, endYear!, rowsContext || []));
+  }, [configOrigen]);
 
   const columns = useMemo(() => {
     const cols = [
@@ -57,17 +66,7 @@ export const TableCreate = ({ editable }: Props) => {
     }
 
     return cols;
-  }, [startYear, endYear]);
-
-  const rowsAndTotal = useMemo(() => {
-    return rows.map((row) => {
-      let sum = 0;
-      for (let i = startYear!; i <= endYear!; i++) {
-        sum += row[i + ""];
-      }
-      row.total = sum;
-    });
-  }, [rows]);
+  }, [startYear, endYear, configOrigen]);
 
   return (
     <>

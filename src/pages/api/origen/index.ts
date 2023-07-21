@@ -26,6 +26,8 @@ async function getOrigenConfig(
   res: NextApiResponse<Data>
 ) {
   await dbConnect();
+  console.log("req.query");
+
   const origenesAhorro = await ConfigOrigenAhorro.findOne({}).lean();
 
   return res.status(201).json(origenesAhorro as any);

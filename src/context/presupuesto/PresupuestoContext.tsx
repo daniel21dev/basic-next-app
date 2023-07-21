@@ -8,6 +8,7 @@ interface ContextProps extends PresupuestoState {
   guardarPresupuesto: () => Promise<void>;
   setISLoading: (isLoading: boolean) => void;
   reset: () => void;
+  getPresupuestoConfig: () => void;
 }
 
 export const PresupuestoContext = createContext({} as ContextProps);

@@ -5,7 +5,9 @@ import { useRouter } from "next/router";
 import { usePresupuesto } from "@/hooks";
 
 const index = () => {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { reset } = usePresupuesto();
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const router = useRouter();
 
   const handleClick = (route: string) => {

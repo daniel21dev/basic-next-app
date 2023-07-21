@@ -42,10 +42,8 @@ export const PresupuestoProvider = ({
   const router = useRouter();
 
   useEffect(() => {
-    getConfig().then((data) => {
-      dispatch({ type: "SET_ORIGENES", payload: data.origenes });
-    });
-  }, []);
+    getPresupuestoConfig();
+  }, [state.startYear, state.endYear]);
 
   const setYears = (startYear?: number, endYear?: number) => {
     dispatch({ type: "SET_YEARS", payload: { startYear, endYear } });
@@ -90,6 +88,12 @@ export const PresupuestoProvider = ({
     dispatch({ type: "RESET" });
   };
 
+  const getPresupuestoConfig = () => {
+    getConfig().then((data) => {
+      dispatch({ type: "SET_ORIGENES", payload: data.origenes });
+    });
+  };
+
   return (
     <PresupuestoContext.Provider
       value={{
@@ -100,6 +104,7 @@ export const PresupuestoProvider = ({
         setTipoCambioDolar,
         setISLoading,
         reset,
+        getPresupuestoConfig,
       }}
     >
       {children}

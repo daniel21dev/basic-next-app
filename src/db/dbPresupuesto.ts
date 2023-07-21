@@ -8,7 +8,7 @@ export const create = async (presupuesto: IPresupuesto) => {
 };
 
 export const getUltimo = async () => {
-  dbConnect();
+  await dbConnect();
 
   const ultimo = await Presupuesto.findOne().sort({ _id: -1 }).lean();
 

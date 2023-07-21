@@ -2,7 +2,7 @@ import { PresupuestoProvider } from "@/context/presupuesto";
 import { NextUIProvider } from "@nextui-org/react";
 import { SessionProvider } from "next-auth/react";
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps }: any) {
   return (
     <SessionProvider session={pageProps.session}>
       <NextUIProvider>

@@ -35,7 +35,7 @@ export const Paso1 = ({ fromYear, toYear }: Props) => {
           <Select
             options={options}
             key="from"
-            onChange={(value) => setYears(value?.value, undefined)}
+            onChange={(value) => setYears(Number(value?.value), undefined)}
             defaultInputValue={startYear?.toString()}
             required
           />
@@ -43,9 +43,9 @@ export const Paso1 = ({ fromYear, toYear }: Props) => {
         <Grid xs={12} justify="center">
           <Text style={{ marginRight: 20 }}>Año fin:</Text>
           <Select
-            options={options.filter((o) => +o.value >= startYear)}
+            options={options.filter((o) => +o.value >= startYear!)}
             key="to"
-            onChange={(value) => setYears(undefined, value?.value)}
+            onChange={(value) => setYears(undefined, Number(value?.value))}
             defaultInputValue={endYear?.toString()}
             required
           />
